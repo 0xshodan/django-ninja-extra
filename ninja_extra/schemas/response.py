@@ -22,9 +22,10 @@ class BaseNinjaResponseSchema(Schema):
     items: List[Any]
 
 
+l
 if sys.version_info >= (3, 7):
 
-    class PaginatedResponseSchema(BaseModel, Generic[T], BasePaginatedResponseSchema):
+    class PaginatedResponseSchema(Generic[T], BasePaginatedResponseSchema):
         results: List[T]
 
     # Pydantic BaseModels has not way of identifying the _orig
@@ -33,7 +34,7 @@ if sys.version_info >= (3, 7):
     #     PaginatedResponseSchema
     # )
 
-    class NinjaPaginationResponseSchema(BaseModel, Generic[T], BaseNinjaResponseSchema):
+    class NinjaPaginationResponseSchema(Generic[T], BaseNinjaResponseSchema):
         items: List[T]
 
         @validator("items", pre=True)
@@ -46,17 +47,17 @@ if sys.version_info >= (3, 7):
     #     NinjaPaginationResponseSchema
     # )
 
-    class IdSchema(BaseModel, Generic[T], Schema):
+    class IdSchema(Generic[T], Schema):
         id: T
 
     # IdSchema.__generic_model__ = IdSchema  # type:ignore[attr-defined]
 
-    class OkSchema(BaseModel, Generic[T], Schema):
+    class OkSchema(Generic[T], Schema):
         detail: Union[T, str] = "Action was successful"
 
     # OkSchema.__generic_model__ = OkSchema  # type:ignore[attr-defined]
 
-    class DetailSchema(BaseModel, Generic[T], Schema):
+    class DetailSchema(Generic[T], Schema):
         detail: T
 
     # DetailSchema.__generic_model__ = DetailSchema  # type:ignore[attr-defined]
