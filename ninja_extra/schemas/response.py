@@ -22,7 +22,6 @@ class BaseNinjaResponseSchema(Schema):
     items: List[Any]
 
 
-l
 if sys.version_info >= (3, 7):
 
     class PaginatedResponseSchema(Generic[T], BasePaginatedResponseSchema):
