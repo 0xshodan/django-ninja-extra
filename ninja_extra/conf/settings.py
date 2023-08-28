@@ -82,7 +82,7 @@ class NinjaExtraSettings(Schema):
             raise ValueError("Invalid data type")
         return value
 
-    @model_validator
+    @model_validator(mode="before")
     @classmethod
     def validate_ninja_extra_settings(cls, values: Any) -> Any:
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
