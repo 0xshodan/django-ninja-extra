@@ -3,10 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from ninja import Schema
 from ninja.constants import NOT_SET
-from pydantic import validator
-from pydantic.generics import GenericModel
-from pydantic.main import BaseModel
-from pydantic.networks import AnyHttpUrl
+from pydantic import BaseModel, AnyHttpUrl, validator
 
 from ninja_extra.generic import GenericType
 
@@ -27,20 +24,16 @@ class BaseNinjaResponseSchema(Schema):
 
 if sys.version_info >= (3, 7):
 
-    class PaginatedResponseSchema(
-        GenericModel, Generic[T], BasePaginatedResponseSchema
-    ):
+    class PaginatedResponseSchema(BaseModel, Generic[T], BasePaginatedResponseSchema):
         results: List[T]
 
-    # Pydantic GenericModels has not way of identifying the _orig
+    # Pydantic BaseModels has not way of identifying the _orig
     # __generic_model__ is more like a fix for that
-    PaginatedResponseSchema.__generic_model__ = (  # type:ignore[attr-defined]
-        PaginatedResponseSchema
-    )
+    # PaginatedResponseSchema.__generic_model__ = (  # type:ignore[attr-defined]
+    #     PaginatedResponseSchema
+    # )
 
-    class NinjaPaginationResponseSchema(
-        GenericModel, Generic[T], BaseNinjaResponseSchema
-    ):
+    class NinjaPaginationResponseSchema(BaseModel, Generic[T], BaseNinjaResponseSchema):
         items: List[T]
 
         @validator("items", pre=True)
@@ -49,24 +42,24 @@ if sys.version_info >= (3, 7):
                 value = list(value)
             return value
 
-    NinjaPaginationResponseSchema.__generic_model__ = (  # type:ignore[attr-defined]
-        NinjaPaginationResponseSchema
-    )
+    # NinjaPaginationResponseSchema.__generic_model__ = (  # type:ignore[attr-defined]
+    #     NinjaPaginationResponseSchema
+    # )
 
-    class IdSchema(GenericModel, Generic[T], Schema):
+    class IdSchema(BaseModel, Generic[T], Schema):
         id: T
 
-    IdSchema.__generic_model__ = IdSchema  # type:ignore[attr-defined]
+    # IdSchema.__generic_model__ = IdSchema  # type:ignore[attr-defined]
 
-    class OkSchema(GenericModel, Generic[T], Schema):
+    class OkSchema(BaseModel, Generic[T], Schema):
         detail: Union[T, str] = "Action was successful"
 
-    OkSchema.__generic_model__ = OkSchema  # type:ignore[attr-defined]
+    # OkSchema.__generic_model__ = OkSchema  # type:ignore[attr-defined]
 
-    class DetailSchema(GenericModel, Generic[T], Schema):
+    class DetailSchema(BaseModel, Generic[T], Schema):
         detail: T
 
-    DetailSchema.__generic_model__ = DetailSchema  # type:ignore[attr-defined]
+    # DetailSchema.__generic_model__ = DetailSchema  # type:ignore[attr-defined]
 else:  # pragma: no cover
 
     class IdSchema(GenericType, generic_base_name="IdSchema"):
