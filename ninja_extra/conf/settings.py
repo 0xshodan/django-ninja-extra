@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 from django.conf import settings as django_settings
 from django.core.signals import setting_changed
 from ninja import Schema
-from pydantic import Field, root_validator, validator
+from pydantic import Field, model_validator, validator
 
 from ninja_extra.lazy import LazyStrImport
 
@@ -82,7 +82,7 @@ class NinjaExtraSettings(Schema):
             raise ValueError("Invalid data type")
         return value
 
-    @root_validator
+    @model_validator
     def validate_ninja_extra_settings(cls, values: Any) -> Any:
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
