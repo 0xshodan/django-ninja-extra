@@ -80,9 +80,10 @@ class NinjaExtraSettings(Schema):
             raise ValueError("Invalid data type")
         return value
 
-    @model_validator(mode="before")
-    @classmethod
-    def validate_ninja_extra_settings(cls, values: Any) -> Any:
+    @model_validator(mode="after")
+    def validate_ninja_extra_settings(self) -> Any:
+        values = vars(self)
+        print(values)
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
                 isinstance(values[item], (tuple, list))
