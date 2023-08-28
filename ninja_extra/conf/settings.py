@@ -15,7 +15,7 @@ class UserDefinedSettingsMapper:
 
 NinjaExtra_SETTINGS_DEFAULTS = {
     "INJECTOR_MODULES": [],
-    "PAGINATION_CLASS": "ninja_extra.pagination.LimitOffsetPagination",
+    "PAGINATION_CLASS": "ninja.pagination.LimitOffsetPagination",
     "THROTTLE_CLASSES": [
         "ninja_extra.throttling.AnonRateThrottle",
         "ninja_extra.throttling.UserRateThrottle",
@@ -25,9 +25,7 @@ NinjaExtra_SETTINGS_DEFAULTS = {
     "SEARCHING_CLASS": "ninja_extra.searching.Searching",
 }
 
-USER_SETTINGS = UserDefinedSettingsMapper(
-    getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
-)
+USER_SETTINGS = getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
 
 
 class NinjaExtraSettings(Schema):
@@ -98,9 +96,7 @@ class NinjaExtraSettings(Schema):
         return values
 
 
-settings = NinjaExtraSettings(
-    **getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
-)
+settings = NinjaExtraSettings(**USER_SETTINGS)
 
 
 def reload_settings(*args: Any, **kwargs: Any) -> None:  # pragma: no cover
