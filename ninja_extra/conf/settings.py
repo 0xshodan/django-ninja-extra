@@ -8,7 +8,7 @@ from pydantic import Field, model_validator, validator
 from ninja_extra.lazy import LazyStrImport
 
 
-class UserDefinedSettingsMapper(dict):
+class UserDefinedSettingsMapper:
     def __init__(self, data: dict) -> None:
         self.__dict__ = data
 
