@@ -8,7 +8,7 @@ from pydantic import Field, model_validator, validator
 from ninja_extra.lazy import LazyStrImport
 
 
-class UserDefinedSettingsMapper:
+class UserDefinedSettingsMapper(dict):
     def __init__(self, data: dict) -> None:
         self.__dict__ = data
 
@@ -32,7 +32,7 @@ USER_SETTINGS = UserDefinedSettingsMapper(
 
 class NinjaExtraSettings(Schema):
     class Config:
-        orm_mode = True
+        from_attributes = True
         validate_assignment = True
 
     PAGINATION_CLASS: Any = Field(
@@ -85,7 +85,6 @@ class NinjaExtraSettings(Schema):
     @model_validator(mode="before")
     @classmethod
     def validate_ninja_extra_settings(cls, values: Any) -> Any:
-        print(values)
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
                 isinstance(values[item], (tuple, list))
