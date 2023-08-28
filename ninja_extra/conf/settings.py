@@ -85,6 +85,7 @@ class NinjaExtraSettings(Schema):
     @model_validator(mode="before")
     @classmethod
     def validate_ninja_extra_settings(cls, values: Any) -> Any:
+        print(values)
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
                 isinstance(values[item], (tuple, list))
