@@ -83,6 +83,7 @@ class NinjaExtraSettings(Schema):
         return value
 
     @model_validator
+    @classmethod
     def validate_ninja_extra_settings(cls, values: Any) -> Any:
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
