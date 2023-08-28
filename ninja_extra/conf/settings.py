@@ -25,7 +25,9 @@ NinjaExtra_SETTINGS_DEFAULTS = {
     "SEARCHING_CLASS": "ninja_extra.searching.Searching",
 }
 
-USER_SETTINGS = getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
+USER_SETTINGS = UserDefinedSettingsMapper(
+    getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
+)
 
 
 class NinjaExtraSettings(Schema):
@@ -34,7 +36,7 @@ class NinjaExtraSettings(Schema):
         validate_assignment = True
 
     PAGINATION_CLASS: Any = Field(
-        "ninja_extra.pagination.LimitOffsetPagination",
+        "ninja.pagination.LimitOffsetPagination",
     )
     PAGINATION_PER_PAGE: int = Field(100)
     THROTTLE_RATES: Dict[str, Optional[str]] = Field(
@@ -81,9 +83,8 @@ class NinjaExtraSettings(Schema):
         return value
 
     @model_validator(mode="after")
-    def validate_ninja_extra_settings(self) -> Any:
+    def validate_ninja_extra_settings(self) -> "NinjaExtraSettings":
         values = vars(self)
-        print(values)
         for item in NinjaExtra_SETTINGS_DEFAULTS.keys():
             if (
                 isinstance(values[item], (tuple, list))
@@ -93,10 +94,10 @@ class NinjaExtraSettings(Schema):
                 values[item] = [LazyStrImport(str(klass)) for klass in values[item]]
             if isinstance(values[item], str):
                 values[item] = LazyStrImport(values[item])
-        return values
+        return NinjaExtraSettings(**values)
 
 
-settings = NinjaExtraSettings(**USER_SETTINGS)
+settings = NinjaExtraSettings.from_orm(USER_SETTINGS)
 
 
 def reload_settings(*args: Any, **kwargs: Any) -> None:  # pragma: no cover
