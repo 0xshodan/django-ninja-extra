@@ -98,7 +98,9 @@ class NinjaExtraSettings(Schema):
         return values
 
 
-settings = NinjaExtraSettings.from_orm(USER_SETTINGS)
+settings = NinjaExtraSettings(
+    **getattr(django_settings, "NINJA_EXTRA", NinjaExtra_SETTINGS_DEFAULTS)
+)
 
 
 def reload_settings(*args: Any, **kwargs: Any) -> None:  # pragma: no cover
